@@ -22,8 +22,12 @@ import java.util.List;
 public class UserController {
     private Log logger = LogFactory.getLog(UserController.class);
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public List<User> getUsers(HttpServletRequest request, HttpServletResponse response) {

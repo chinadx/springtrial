@@ -16,8 +16,12 @@ import java.util.List;
 public class UserService {
     Log logger = LogFactory.getLog(UserService.class);
 
+    private final UserMapper userMapper;
+
     @Autowired
-    private UserMapper userMapper;
+    public UserService(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
 
     public User getUserInfo(int id) {
         User user = userMapper.selectByPrimaryKey(id);

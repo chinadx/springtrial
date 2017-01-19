@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50525
 File Encoding         : 65001
 
-Date: 2017-01-19 14:31:09
+Date: 2017-01-19 16:50:23
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -56,15 +56,16 @@ INSERT INTO `sys_log` VALUES ('21', 'http://localhost:8080/users', '/users', '0:
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `id` int(11) NOT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `age` int(11) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
 INSERT INTO `user` VALUES ('1', '黄鹤', '56', '123456');
 INSERT INTO `user` VALUES ('2', '小姨子', '18', '123456');
+INSERT INTO `user` VALUES ('3', '厂长夫人', '54', '123456');

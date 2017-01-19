@@ -5,10 +5,8 @@ import cn.goodman.db.user.dto.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,5 +37,11 @@ public class UserController {
     public User getUserInfo(@PathVariable int id) {
         User user = userService.getUserInfo(id);
         return user;
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public User setUserInfo(@RequestBody User record) {
+        userService.addUser(record);
+        return record;
     }
 }

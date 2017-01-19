@@ -31,4 +31,8 @@ public class UserService {
     public List<User> getAllUsers() {
         return userMapper.selectAll();
     }
+
+    public int addUser(User user) {
+        return userMapper.insertSelective(user);
+    }
 }

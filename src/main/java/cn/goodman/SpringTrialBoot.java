@@ -18,7 +18,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 /**
  * Created by Shaun on 2017/1/18.
  */
-@EnableAutoConfiguration
 @SpringBootApplication
 @MapperScan("cn.goodman.db.*.dao")
 public class SpringTrialBoot {

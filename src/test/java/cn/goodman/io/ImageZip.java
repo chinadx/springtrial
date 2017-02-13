@@ -96,7 +96,25 @@ public class ImageZip {
             iwp.setCompressionQuality((float) quality / 100f);
             iw.setOutput(fileImageOutputStream);
             iw.addIIOWriteProgressListener(listener);
-            iw.write(null, new IIOImage(image, null, null), iwp);
+
+            /**
+             * 如果原始图片尺寸大于1024，先压缩到1024
+             */
+            int w = image.getWidth();
+            int h = image.getHeight();
+            if (w > 1024) {
+                int w_new = 1024;
+                int h_new = (h * 1024) / w;
+                BufferedImage zip = new BufferedImage(w_new, h_new, BufferedImage.TYPE_INT_RGB);
+
+                zip.getGraphics().drawImage(
+                        image.getScaledInstance(w_new, h_new, Image.SCALE_DEFAULT), 0, 0, null);
+                iw.write(null, new IIOImage(zip, null, null), iwp);
+            } else {
+                iw.write(null, new IIOImage(image, null, null), iwp);
+            }
+
+
             iw.dispose();
             fileImageOutputStream.flush();
             fileImageOutputStream.close();
@@ -105,7 +123,7 @@ public class ImageZip {
 
     public static void main(String[] args) {
         path = "F:\\xiehuier";
-        destPath = "F:\\temp";
+        destPath = "F:\\temp\\zip";
         listFile(new File(path));
     }
 }

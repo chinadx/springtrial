@@ -18,6 +18,10 @@ import java.util.Iterator;
  * 将指定目录的图片按比例压缩
  */
 public class ImageZip {
+    /**
+     * path是图片的原路径
+     * destpath是压缩之后的目标路径
+     */
     private static String path = null;
     private static String destPath = null;
 
@@ -66,7 +70,7 @@ public class ImageZip {
                     /**
                      * 调用压缩处理方法
                      */
-                    writeJPEG(ff, bufferedImage, 50, null);
+                    zipJPEG(ff, bufferedImage, 50, null);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -75,13 +79,13 @@ public class ImageZip {
     }
 
     /**
-     * 保存图像到 JPEG 文件
+     * 按质量比例压缩JPEG 文件
      * @param file 保存的目标文件
      * @param image 保存的源图像
-     * @param quality 保存的 JPEG 图像质量
+     * @param quality 保存的 JPEG 图像质量百分比
      * @param listener 保存进度监听器
      */
-    public static void writeJPEG(File file, BufferedImage image, int quality, IIOWriteProgressListener listener) throws
+    public static void zipJPEG(File file, BufferedImage image, int quality, IIOWriteProgressListener listener) throws
             FileNotFoundException, IOException {
         Iterator it = ImageIO.getImageWritersBySuffix("jpg");
         if (it.hasNext()) {

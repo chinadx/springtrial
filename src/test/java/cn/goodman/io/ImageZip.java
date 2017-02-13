@@ -32,22 +32,40 @@ public class ImageZip {
             } else {
                 System.out.print("这是个文件，" + file.getName() + "，" + file.getPath() + "，大小为：" + file.length());
                 try {
+                    /**
+                     * 读取图片文件
+                     */
                     BufferedImage bufferedImage = ImageIO.read(file);
                     int width = bufferedImage.getWidth(null);
                     int height = bufferedImage.getHeight(null);
                     System.out.println("，分辨率为：" + width + "x" + height);
 
+                    /**
+                     * filepath为带路径的文件名
+                     * fileDir为文件路径
+                     */
                     String filepath = file.getPath();
                     String fileDir = file.getParent();
 
+                    /**
+                     * 获取目标目录并创建目录
+                     */
                     StringBuffer newPath = new StringBuffer();
                     newPath.append(destPath);
                     newPath.append(fileDir.substring(path.length()));
                     File f = new File(newPath.toString());
                     f.mkdirs();
+
+                    /**
+                     * 继续拼装目标文件全名
+                     */
                     newPath.append(File.separatorChar);
                     newPath.append(file.getName());
                     File ff = new File(newPath.toString());
+
+                    /**
+                     * 调用压缩处理方法
+                     */
                     writeJPEG(ff, bufferedImage, 50, null);
                 } catch (IOException e) {
                     e.printStackTrace();

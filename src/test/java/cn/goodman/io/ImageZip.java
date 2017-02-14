@@ -30,7 +30,6 @@ public class ImageZip implements Runnable{
     private String srcPath = null;
     private String destPath = null;
     private File rootFileForThread = null;
-    private int dealNum;
 
     public boolean isNumeric(String str){
         Pattern pattern = Pattern.compile("[0-9]*");
@@ -47,7 +46,6 @@ public class ImageZip implements Runnable{
         this.srcPath = srcPath;
         this.destPath = destPath;
         this.rootFileForThread = file;
-        this.dealNum = 0;
     }
 
     @Override
@@ -78,26 +76,27 @@ public class ImageZip implements Runnable{
                         }
                     }
                 }
+                System.out.println("[" + this.index + "]" + file.getPath());
                 File[] files = file.listFiles();
                 for (File f : files) {
                     listFile(f);
                 }
             } else {
-                System.out.print("[" + this.index + "]" + "这是个文件，" + file.getName() + "，" + file.getPath() + "，大小为：" + file.length());
+//                System.out.print("[" + this.index + "]" + "这是个文件，" + file.getName() + "，" + file.getPath() + "，大小为：" + file.length());
                 try {
                     /**
                      * 读取图片文件
                      */
                     BufferedImage bufferedImage = ImageIO.read(file);
-                    int width = bufferedImage.getWidth(null);
-                    int height = bufferedImage.getHeight(null);
-                    System.out.println("，分辨率为：" + width + "x" + height);
+//                    int width = bufferedImage.getWidth(null);
+//                    int height = bufferedImage.getHeight(null);
+//                    System.out.println("，分辨率为：" + width + "x" + height);
 
                     /**
                      * filepath为带路径的文件名
                      * fileDir为文件路径
                      */
-                    String filepath = file.getPath();
+//                    String filepath = file.getPath();
                     String fileDir = file.getParent();
 
                     /**
@@ -120,8 +119,7 @@ public class ImageZip implements Runnable{
                      * 调用压缩处理方法
                      */
                     zipJPEG(ff, bufferedImage, 50, null);
-                    this.dealNum++;
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -135,8 +133,7 @@ public class ImageZip implements Runnable{
      * @param quality 保存的 JPEG 图像质量百分比
      * @param listener 保存进度监听器
      */
-    public static void zipJPEG(File file, BufferedImage image, int quality, IIOWriteProgressListener listener) throws
-            FileNotFoundException, IOException {
+    public static void zipJPEG(File file, BufferedImage image, int quality, IIOWriteProgressListener listener) throws IOException {
         Iterator it = ImageIO.getImageWritersBySuffix("jpg");
         if (it.hasNext()) {
             FileImageOutputStream fileImageOutputStream = new FileImageOutputStream(file);
@@ -167,8 +164,6 @@ public class ImageZip implements Runnable{
             } else {
                 iw.write(null, new IIOImage(image, null, null), iwp);
             }
-
-
             iw.dispose();
             fileImageOutputStream.flush();
             fileImageOutputStream.close();
@@ -178,16 +173,18 @@ public class ImageZip implements Runnable{
     public static void main(String[] args) {
         String srcPath = "F:\\xiehuier";
         String destPath = "F:\\temp\\zip";
+//        String srcPath = "/mnt/usb/xiehuier/hotelimg";
+//        String destPath = "/usr/local/xhimg";
 //        listFile(new File(srcPath));
 
         ExecutorService service = Executors.newCachedThreadPool();
 //        ExecutorService service = new ThreadPoolExecutor(8, 10, 60, TimeUnit.SECONDS,
 //                new LinkedBlockingQueue<>());
-        int threadNum = 8;
+        int threadNum = 16;
         for(int i=0; i<threadNum; i++) {
             service.execute(new ImageZip(i, threadNum, srcPath, destPath, new File(srcPath)));
         }
-        System.out.println("submit finish");
+//        System.out.println("submit finish");
         service.shutdown();
     }
 

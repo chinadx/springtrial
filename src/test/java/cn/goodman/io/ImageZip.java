@@ -114,11 +114,20 @@ public class ImageZip implements Runnable{
                     newPath.append(File.separatorChar);
                     newPath.append(file.getName());
                     File ff = new File(newPath.toString());
-
+                    if(ff.exists()) {
+                        /**
+                         * 如果目标已经存在了，就不需要费劲了。
+                         */
+                        return;
+                    }
                     /**
                      * 调用压缩处理方法
                      */
                     zipJPEG(ff, bufferedImage, 50, null);
+                    bufferedImage = null;
+                    ff = null;
+                    newPath = null;
+                    f = null;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -161,10 +170,12 @@ public class ImageZip implements Runnable{
                 zip.getGraphics().drawImage(
                         image.getScaledInstance(w_new, h_new, Image.SCALE_DEFAULT), 0, 0, null);
                 iw.write(null, new IIOImage(zip, null, null), iwp);
+                zip = null;
             } else {
                 iw.write(null, new IIOImage(image, null, null), iwp);
             }
             iw.dispose();
+
             fileImageOutputStream.flush();
             fileImageOutputStream.close();
         }

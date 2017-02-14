@@ -12,29 +12,78 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.concurrent.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Shaun on 2017/2/13.
  * 将指定目录的图片按比例压缩
  */
-public class ImageZip {
+public class ImageZip implements Runnable{
+    private int index;
+    private int threadNum;
     /**
-     * path是图片的原路径
+     * srcPath是图片的原路径
      * destpath是压缩之后的目标路径
      */
-    private static String path = null;
-    private static String destPath = null;
+    private String srcPath = null;
+    private String destPath = null;
+    private File rootFileForThread = null;
+    private int dealNum;
 
-    public static void listFile(File file) {
+    public boolean isNumeric(String str){
+        Pattern pattern = Pattern.compile("[0-9]*");
+        Matcher isNum = pattern.matcher(str);
+        if( !isNum.matches() ){
+            return false;
+        }
+        return true;
+    }
+
+    public ImageZip(int index, int threadNum, String srcPath, String destPath, File file) {
+        this.index = index;
+        this.threadNum = threadNum;
+        this.srcPath = srcPath;
+        this.destPath = destPath;
+        this.rootFileForThread = file;
+        this.dealNum = 0;
+    }
+
+    @Override
+    public void run() {
+        if(rootFileForThread != null) {
+            listFile(rootFileForThread);
+        }
+    }
+
+    public void listFile(File file) {
         if (file != null) {
             if (file.isDirectory()) {
-                System.out.println("这是个目录，" + file.getName());
+//                System.out.println("[" + this.index + "]" + "这是个目录，" + file.getName());
+                /**
+                 * 根据目录名判断是否归属本线程处理
+                 * 只判断目录名为1000的整数倍的
+                 * 按照4000进行取模操作
+                 */
+                String rr = file.getName();
+                if(isNumeric(rr)) {
+                    int rootPath = Integer.parseInt(rr);
+//                    System.out.println(rootPath);
+                    if (rootPath % 1000 == 0) {
+//                        System.out.println("[" + this.index + "]" + "aaaaa");
+                        if ((rootPath/1000) % this.threadNum != this.index) {
+//                            System.out.println("[" + this.index + "]" + "bbbb");
+                            return;
+                        }
+                    }
+                }
                 File[] files = file.listFiles();
                 for (File f : files) {
                     listFile(f);
                 }
             } else {
-                System.out.print("这是个文件，" + file.getName() + "，" + file.getPath() + "，大小为：" + file.length());
+                System.out.print("[" + this.index + "]" + "这是个文件，" + file.getName() + "，" + file.getPath() + "，大小为：" + file.length());
                 try {
                     /**
                      * 读取图片文件
@@ -56,7 +105,7 @@ public class ImageZip {
                      */
                     StringBuffer newPath = new StringBuffer();
                     newPath.append(destPath);
-                    newPath.append(fileDir.substring(path.length()));
+                    newPath.append(fileDir.substring(srcPath.length()));
                     File f = new File(newPath.toString());
                     f.mkdirs();
 
@@ -71,6 +120,7 @@ public class ImageZip {
                      * 调用压缩处理方法
                      */
                     zipJPEG(ff, bufferedImage, 50, null);
+                    this.dealNum++;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -102,9 +152,13 @@ public class ImageZip {
              */
             int w = image.getWidth();
             int h = image.getHeight();
-            if (w > 1024) {
+            if (w > 1024 || h > 768) {
                 int w_new = 1024;
                 int h_new = (h * 1024) / w;
+                if(h_new > 768) {
+                    h_new = 768;
+                    w_new = (w * 768) / h;
+                }
                 BufferedImage zip = new BufferedImage(w_new, h_new, BufferedImage.TYPE_INT_RGB);
 
                 zip.getGraphics().drawImage(
@@ -122,8 +176,19 @@ public class ImageZip {
     }
 
     public static void main(String[] args) {
-        path = "F:\\xiehuier";
-        destPath = "F:\\temp\\zip";
-        listFile(new File(path));
+        String srcPath = "F:\\xiehuier";
+        String destPath = "F:\\temp\\zip";
+//        listFile(new File(srcPath));
+
+        ExecutorService service = Executors.newCachedThreadPool();
+//        ExecutorService service = new ThreadPoolExecutor(8, 10, 60, TimeUnit.SECONDS,
+//                new LinkedBlockingQueue<>());
+        int threadNum = 8;
+        for(int i=0; i<threadNum; i++) {
+            service.execute(new ImageZip(i, threadNum, srcPath, destPath, new File(srcPath)));
+        }
+        System.out.println("submit finish");
+        service.shutdown();
     }
+
 }

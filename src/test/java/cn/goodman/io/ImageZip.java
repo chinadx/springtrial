@@ -9,7 +9,6 @@ import javax.imageio.stream.FileImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.concurrent.*;
@@ -83,11 +82,14 @@ public class ImageZip implements Runnable{
                 }
             } else {
 //                System.out.print("[" + this.index + "]" + "这是个文件，" + file.getName() + "，" + file.getPath() + "，大小为：" + file.length());
+                BufferedImage bufferedImage = null;
+                File f = null;
+                File ff = null;
                 try {
                     /**
                      * 读取图片文件
                      */
-                    BufferedImage bufferedImage = ImageIO.read(file);
+                    bufferedImage = ImageIO.read(file);
 //                    int width = bufferedImage.getWidth(null);
 //                    int height = bufferedImage.getHeight(null);
 //                    System.out.println("，分辨率为：" + width + "x" + height);
@@ -105,7 +107,7 @@ public class ImageZip implements Runnable{
                     StringBuffer newPath = new StringBuffer();
                     newPath.append(destPath);
                     newPath.append(fileDir.substring(srcPath.length()));
-                    File f = new File(newPath.toString());
+                    f = new File(newPath.toString());
                     f.mkdirs();
 
                     /**
@@ -113,7 +115,7 @@ public class ImageZip implements Runnable{
                      */
                     newPath.append(File.separatorChar);
                     newPath.append(file.getName());
-                    File ff = new File(newPath.toString());
+                    ff = new File(newPath.toString());
                     if(ff.exists()) {
                         /**
                          * 如果目标已经存在了，就不需要费劲了。
@@ -124,12 +126,13 @@ public class ImageZip implements Runnable{
                      * 调用压缩处理方法
                      */
                     zipJPEG(ff, bufferedImage, 50, null);
-                    bufferedImage = null;
-                    ff = null;
-                    newPath = null;
-                    f = null;
+
                 } catch (Exception e) {
                     e.printStackTrace();
+                } finally {
+                    bufferedImage = null;
+                    ff = null;
+                    f = null;
                 }
             }
         }

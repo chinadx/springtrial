@@ -20,6 +20,9 @@ import java.util.regex.Pattern;
  * 将指定目录的图片按比例压缩
  */
 public class ImageZip implements Runnable{
+    private static final int FIXED_MAX_WIDTH = 1024;
+    private static final int FIXED_MAX_HEIGHT = 768;
+    private static final int IMAGE_QUALITY_PERCENT = 50;
     private int index;
     private int threadNum;
     /**
@@ -61,7 +64,9 @@ public class ImageZip implements Runnable{
                 /**
                  * 根据目录名判断是否归属本线程处理
                  * 只判断目录名为1000的整数倍的
-                 * 按照4000进行取模操作
+                 * 按照目录名除以1000，再使用线程数进行取模操作
+                 * 之所以这么设计，是因为这是图片目录结构决定的。1000整数倍为第一级目录，下面是第二级目录。
+                 * 我们只对第一级目录进行分线程处理
                  */
                 String rr = file.getName();
                 if(isNumeric(rr)) {
@@ -125,7 +130,7 @@ public class ImageZip implements Runnable{
                     /**
                      * 调用压缩处理方法
                      */
-                    zipJPEG(ff, bufferedImage, 50, null);
+                    zipJPEG(ff, bufferedImage, IMAGE_QUALITY_PERCENT, null);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -161,12 +166,12 @@ public class ImageZip implements Runnable{
              */
             int w = image.getWidth();
             int h = image.getHeight();
-            if (w > 1024 || h > 768) {
-                int w_new = 1024;
-                int h_new = (h * 1024) / w;
-                if(h_new > 768) {
-                    h_new = 768;
-                    w_new = (w * 768) / h;
+            if (w > FIXED_MAX_WIDTH || h > FIXED_MAX_HEIGHT) {
+                int w_new = FIXED_MAX_WIDTH;
+                int h_new = (h * FIXED_MAX_WIDTH) / w;
+                if(h_new > FIXED_MAX_HEIGHT) {
+                    h_new = FIXED_MAX_HEIGHT;
+                    w_new = (w * FIXED_MAX_HEIGHT) / h;
                 }
                 BufferedImage zip = new BufferedImage(w_new, h_new, BufferedImage.TYPE_INT_RGB);
 

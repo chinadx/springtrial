@@ -25,10 +25,11 @@ public class WordMap {
      */
     public static Map<String, Integer> readFile(String fileName) {
         Map<String, Integer> wordMap = new HashMap<String, Integer>();
-        try {
+        try (
             FileInputStream fis = new FileInputStream(fileName);
             DataInputStream dis = new DataInputStream(fis);
             BufferedReader br = new BufferedReader(new InputStreamReader(dis));
+            ) {
             Pattern pattern = Pattern.compile("\\s+");
             String line = null;
             while((line = br.readLine()) != null) {

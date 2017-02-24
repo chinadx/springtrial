@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class ArrayListRemove {
     public static void main(String[] args) {
-        List<Integer> list = new ArrayList<Integer>();
+        List<Integer> list = new ArrayList<Integer>(200);
         for(int i=0; i<=100; i++) {
             list.add(i);
         }

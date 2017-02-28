@@ -1,6 +1,8 @@
 package cn.goodman;
 
 import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -24,5 +26,15 @@ public class Hehe {
             nn += ca[i-1];
         }
         System.out.println(nn);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/M/d");
+        try {
+            Date begin = sdf.parse("2017/5/12");
+            Date end = sdf.parse("2017/5/20");
+            long duration = (end.getTime() - begin.getTime())/(24 * 60 * 60 * 1000);
+            System.out.println(duration);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }

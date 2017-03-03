@@ -1,0 +1,3 @@
+# springtrial
+src中用来测试SpringBoot的一些特性
+test中有一些数据结构和算法的练习demo代码

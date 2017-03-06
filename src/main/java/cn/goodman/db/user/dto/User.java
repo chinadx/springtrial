@@ -1,6 +1,11 @@
 package cn.goodman.db.user.dto;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
+
+    private static final long serialVersionUID = -8844321196497161267L;
+
     private Integer id;
 
     private String name;

@@ -22,8 +22,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class RedisCacheConfig extends CachingConfigurerSupport {
 
     @Bean
-    JedisConnectionFactory jedisConnectionFactory() {
-        return new JedisConnectionFactory();
+    public JedisConnectionFactory jedisConnectionFactory() {
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
+        jedisConnectionFactory.afterPropertiesSet();
+        return jedisConnectionFactory;
     }
 
     @Bean

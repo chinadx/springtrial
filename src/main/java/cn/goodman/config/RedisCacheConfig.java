@@ -12,8 +12,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 /**
  * Redis的支持定义
- * http://blog.csdn.net/defonds/article/details/48716161
- * http://www.myexception.cn/other/1938770.html
  * http://blog.didispace.com/springbootredis/
  * Created by china on 2017/3/6.
  */

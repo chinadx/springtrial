@@ -10,7 +10,11 @@ import java.util.List;
  * Created by Shaun on 2017/2/14.
  */
 public class Hehe {
-    public static void main (String[] args) {
+    public static void main(String[] args) {
+        final String ff;
+        ff = "asbd";
+    }
+    public static void main22 (String[] args) {
         String xx = "7ED56A3A91A443EA95DEF8FF55C8FE93";
         String fmt = MessageFormat.format("{0}, a {1} destroyed the {2} town, {3} people died.",
                 new Date(), "blizzard storm", "South Park", 312);

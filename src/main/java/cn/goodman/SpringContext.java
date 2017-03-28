@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
  * 需同Spring Boot启动类同包或子包
  */
 @Component
-public class SpringUtils implements ApplicationContextAware {
+public class SpringContext implements ApplicationContextAware {
     private static ApplicationContext applicationContext = null;
 
     @Override
     public void setApplicationContext(ApplicationContext arg0) throws BeansException {
-        if (SpringUtils.applicationContext == null) {
-            SpringUtils.applicationContext = arg0;
+        if (SpringContext.applicationContext == null) {
+            SpringContext.applicationContext = arg0;
         }
     }
 
